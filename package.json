@@ -1,0 +1,40 @@
+{
+  "name": "cloud-minds",
+  "version": "0.1.0",
+  "bin": {
+    "cloud-minds": "bin/cloud-minds.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/jest": "^30",
+    "@types/node": "^24.10.1",
+    "aws-cdk": "2.1104.0",
+    "jest": "^30",
+    "ts-jest": "^29",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.978.0",
+    "@aws-sdk/client-lambda": "^3.978.0",
+    "@aws-sdk/client-s3": "^3.978.0",
+    "@aws-sdk/s3-request-presigner": "^3.978.0",
+    "aws-cdk-lib": "^2.236.0",
+    "constructs": "^10.0.0"
+  },
+  "description": "This is a blank project for CDK development with TypeScript.",
+  "main": "find-function.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
