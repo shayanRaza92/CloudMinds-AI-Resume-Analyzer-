@@ -1,4 +1,4 @@
-# CloudMinds - AI Resume Analyzer
+# Resumind - AI Resume Analyzer
 
 Hi! This is **CloudMinds**, a project I built to help people check their resumes using AI. Instead of just a random score, it actually reads the resume and gives specific advice on how to improve it.
 
