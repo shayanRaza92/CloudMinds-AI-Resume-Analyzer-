@@ -41,7 +41,7 @@ export class CloudMindsStack extends cdk.Stack {
       code: lambda.Code.fromAsset('functions/analyze'),
       timeout: cdk.Duration.seconds(30),
       environment: {
-        GROQ_API_KEY: 'your-groq-api-key-here' // Replace with your actual key in a secure environment variable
+        GROQ_API_KEY: 'YOUR_GROQ_API_KEY' // Replace with your actual key in a secure environment variable
       },
     });
 

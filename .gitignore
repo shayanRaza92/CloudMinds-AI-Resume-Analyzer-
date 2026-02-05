@@ -39,3 +39,7 @@ bucket.txt
 identity.json
 *.pdf
 !resume_Shayan_Raza.pdf
+
+# Generated logs and outputs
+*.log
+stack_outputs.json

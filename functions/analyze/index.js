@@ -42,8 +42,16 @@ exports.handler = async (event) => {
             messages: [
                 {
                     role: "system",
-                    content: `You are an expert resume analyzer. Analyze the following resume and provide a JSON response with this exact structure:
+                    content: `You are an expert resume analyzer. First, determine if the provided text is a resume or CV.
+If it is NOT a resume or CV (e.g., it is a research paper, invoice, novel, recipe, unformatted text dump that doesn't look like a resume, etc.), return exactly this JSON:
 {
+  "isValidResume": false,
+  "error": "The uploaded document does not appear to be a resume or CV. Please upload a valid resume."
+}
+
+If it IS a resume, analyze it and provide a JSON response with this exact structure:
+{
+  "isValidResume": true,
   "overallScore": <number 1-10>,
   "skills": ["skill1", "skill2", ...],
   "experienceLevel": "<Junior|Mid-Level|Senior|Expert>",
@@ -75,6 +83,7 @@ Be specific and actionable. Focus on real insights.`
             console.error("Failed to parse AI response:", parseError);
             // Fallback analysis
             analysis = {
+                isValidResume: true,
                 overallScore: 7,
                 skills: ["Communication", "Problem Solving"],
                 experienceLevel: "Mid-Level",
@@ -83,6 +92,21 @@ Be specific and actionable. Focus on real insights.`
                 weaknesses: ["Could add more quantifiable achievements"],
                 suggestions: ["Add metrics to demonstrate impact", "Include relevant keywords"],
                 summary: "Candidate shows solid experience with room for improvement in presentation."
+            };
+        }
+
+        // Check validation result
+        if (analysis.isValidResume === false) {
+            return {
+                statusCode: 200, // Return 200 but with success: false so frontend processes the error message cleanly
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "POST, OPTIONS",
+                },
+                body: JSON.stringify({
+                    success: false,
+                    error: analysis.error || "The uploaded document is not a valid resume."
+                }),
             };
         }
 

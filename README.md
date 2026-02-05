@@ -1,45 +1,52 @@
 # CloudMinds - AI Resume Analyzer
 
-CloudMinds is a simple and smart tool that helps you improve your resume using AI. It tells you exactly what is working, what needs fixing, and how to get past the automatic filters (ATS) used by companies.
+Hi! This is **CloudMinds**, a project I built to help people check their resumes using AI. Instead of just a random score, it actually reads the resume and gives specific advice on how to improve it.
 
-**Live Website:** [https://d23rjemrsmfplx.cloudfront.net](https://d23rjemrsmfplx.cloudfront.net)
+I built this to learn how to connect a modern React frontend with a fully serverless AWS backend.
+
+## The Tech Stack & How I Built It
+
+Here is a look under the hood at what tools I used and exactly where they fit into the project.
+
+### 1. **Infrastructure as Code (AWS CDK)**
+Instead of clicking buttons in the AWS console, I wrote code to create all my servers and databases.
+- **Where:** [`lib/cloud-minds-stack.ts`](lib/cloud-minds-stack.ts)
+- **How:** This file is the "blueprint". I defined my **S3 buckets** (for storing resumes), **Lambda functions** (the code that runs), and **API Gateway** (the front door for requests) all in TypeScript.
+
+### 2. **The Brain (Groq AI & Llama 3)**
+This is the core intelligence. I used Groq because it is incredibly fast at running the Llama 3 AI model.
+- **Where:** [`functions/analyze/index.js`](functions/analyze/index.js)
+- **How:** Inside the `handler` function, I take the text from the PDF and send it to Groq with a custom prompt. I tell the AI: *"You are an expert resume analyzer,"* and it sends back a JSON response with scores, skills, and advice.
+
+### 3. **Serverless Backend (AWS Lambda)**
+I didn't want to manage a server that runs 24/7, so I used Lambda functions that only run when someone uses the site.
+- **Upload Function** ([`functions/upload/index.js`](functions/upload/index.js)): This generates a secure "presigned URL" so the frontend can upload the PDF directly to S3 safely.
+- **Analyze Function** ([`functions/analyze/index.js`](functions/analyze/index.js)): This triggers after the upload. It downloads the file, reads the text using `pdf-parse`, and talks to the AI.
+
+### 4. **Frontend (React + Vite)**
+The website itself is built with React.
+- **Where:** [`frontend/src/App.jsx`](frontend/src/App.jsx)
+- **How:** This file handles everything the user sees.
+    - `handleAnalyze()`: This function ties it all together. First, it asks the backend for a safe upload link, uploads the file, and then asks the analysis Lambda to process it.
+    - **Visuals:** I used `recharts` for the score gauges and `lucide-react` for the icons to make it look clean and modern.
+
+### 5. **Hosting (AWS S3 & CloudFront)**
+- **Where:** Configured in [`lib/cloud-minds-stack.ts`](lib/cloud-minds-stack.ts)
+- **How:** The React code is turned into static files and stored in an S3 bucket. CloudFront then distributes it globally so the site loads fast for everyone, no matter where they are.
 
 ---
 
-## What it does
-- **Smart Scoring:** Gives you a score out of 10 based on how good your resume is.
-- **ATS Checker:** Tells you how well robots can read your resume.
-- **Skills Check:** Shows your top skills in an easy-to-read chart.
-- **Fixes:** Gives you real advice on what to change to land more interviews.
-- **Fast:** Analyzes your entire resume in just a few seconds.
+## How to Run It
 
----
-
-## How it works
-1. **Upload:** You pick your resume (PDF only).
-2. **Process:** The system safely uploads it to the cloud.
-3. **Analyze:** AI reads everything and looks for strengths and weaknesses.
-4. **Result:** You see a dashboard with scores, charts, and advice.
-
----
-
-## Technologies Used
-Here is a simple breakdown of the tools I used to build this:
-
-- **React:** Used to build the website and the items you see and click on.
-- **AWS S3:** A safe place to store the resumes you upload and host the website files.
-- **AWS Lambda:** The "worker" that runs the code for analyzing resumes without needing a full server.
-- **AWS CloudFront:** Makes the website fast by serving it from a location closest to you.
-- **Groq AI (Llama 3):** The brain that actually reads the resume and gives smart feedback.
-- **Recharts:** Used to create the cool charts and score gauges you see.
-- **Lucide React:** Provides the clean icons used throughout the site.
-- **AWS CDK:** The master plan that sets up all the cloud parts automatically.
+1. **Install Dependencies:** `npm install`
+2. **Build Frontend:** `cd frontend && npm install && npm run build`
+3. **Deploy:** `npx cdk deploy`
 
 ---
 
 ## Contact Me
-If you have any questions or want to collaborate, feel free to reach out:
-
+If you have questions about the code or just want to chat:
 - **Email:** [shayanraza2333@gmail.com](mailto:shayanraza2333@gmail.com)
 - **LinkedIn:** [Connect with me](https://www.linkedin.com/in/shayan-raza-0402472a5/)
 
+---
